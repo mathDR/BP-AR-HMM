@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 
 from generate_data import generate_timeseries_set as gtss
 from plotter import *
+from parameters import *
 
 # -------------------------------------------------   CREATE TOY DATA!
 if __name__ == '__main__':
   print 'Creating some toy data...\n'
   nStates = 4
-  numTS = 5
-  dim = 2
+  numTS   = 5
+  dim     = 2
   # First, we'll create some toy data
   #   5 sequences, each of length between 50 and 500.
   #   Each sequences selects from 4 behaviors,
@@ -17,10 +18,9 @@ if __name__ == '__main__':
   #     We'll use num=4 behaviors, each of which defines a distinct Gaussian
   #     emission distribution (with dim=2 dimensions).
   emissions, trueStates, data  = gtss(nStates, dim, numTS, minl=50, maxl=500)
-
   # Visualize the raw data time series
   # with background colored by "true" hidden state
-  generate_timeseriesplot(data,trueStates)
+  '''generate_timeseriesplot(data,trueStates)
 
   # Visualize the "true" generating parameters
   # Feat matrix F (binary numTS x nStates matrix )
@@ -30,10 +30,17 @@ if __name__ == '__main__':
   generate_emissions(emissions,data)
 
   # -------------------------------------------------   RUN MCMC INFERENCE!
-  #modelP = {'bpM.gamma', 2};
-  #algP   = {'Niter', 100,'HMM.doSampleHypers',0,'BP.doSampleMass',0,'BP.doSampleConc',0};
+  modelP = ModelParams_BPHMM(data)
+  modelP.bpM.gamma = 2
+
+  algP = MCMCParamsBPHMM()
+  algP.Niter = 100
+  algP.HMM.doSampleHypers = 0
+  algP.BP.doSampleMass = 0
+  algP.BP.doSampleConc = 0
   # Start out with just one feature for all objects
-  #initP  = {'F.nTotal', 1};
+  #initP = ()
+  #initP.F.nTotal = 1
   #CH = runBPHMM( data, modelP, {1, 1}, algP, initP );
   # CH is a structure that captures the "Chain History" of the MCMC
   #  it stores both model config at each each iteration (in Psi field)
@@ -77,3 +84,4 @@ if __name__ == '__main__':
   #set( gcf, 'Units', 'normalized', 'Position', [0.1 0.25 0.75 0.5] );
   #title('Est. Z : Seq 3', 'FontSize', 20 );
 
+  '''
